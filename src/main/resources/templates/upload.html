@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Upload and Download</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js">
+    </script>
+
+    <style>
+        input[type="file"]::file-selector-button {
+            border-radius: 4px;
+            padding: 0 16px;
+            height: 40px;
+            cursor: pointer;
+            background-color: white;
+            border: 1px solid rgba(0, 0, 0, 0.16);
+            box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
+            margin-right: 16px;
+            transition: background-color 200ms;
+        }
+
+        /* file upload button hover state */
+        input[type="file"]::file-selector-button:hover {
+            background-color: #f3f4f6;
+        }
+
+        /* file upload button active state */
+        input[type="file"]::file-selector-button:active {
+            background-color: #e5e7eb;
+        }
+
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .container {
+            height: 100vh;
+            width: 100%;
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            background-color: #fcfcfc;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
+            width: 600px;
+            height: 350px;
+            background-color: #ffffff;
+            padding: 10px 30px 40px;
+        }
+
+        .card h3 {
+            font-size: 22px;
+            font-weight: 600;
+
+        }
+
+        .drop_box {
+            margin: 10px 0;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border: 3px dotted #a3a3a3;
+            border-radius: 5px;
+        }
+
+        .drop_box h4 {
+            font-size: 16px;
+            font-weight: 400;
+            color: #2e2e2e;
+        }
+
+        .drop_box p {
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #a3a3a3;
+        }
+
+        .btn {
+            text-decoration: none;
+            background-color: #005af0;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            text-decoration: none;
+            background-color: #ffffff;
+            color: #005af0;
+            padding: 10px 20px;
+            border: none;
+            outline: 1px solid #010101;
+        }
+
+        .form input {
+            margin: 10px 0;
+            width: 100%;
+            background-color: #e2e2e2;
+            border: none;
+            outline: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+        }
+
+        .box {
+            position: relative; /* added */
+            width: 100vw; /* added */
+            height: 100vh; /* added */
+            min-height: 1080px; /* this is only to mimic a larger background like your map */
+        }
+
+        #box-dynamic {
+            width: 420px;
+            line-height: 25px;
+            background: rgba(0, 0, 0, 0.2);
+            position: absolute;
+            z-index: 500 !important;
+            -ms-transition: all 0.3s ease-out;
+            -moz-transition: all 0.3s ease-out;
+            -webkit-transition: all 0.3s ease-out;
+            -o-transition: all 0.3s ease-out;
+            transition: all 0.3s ease-out;
+            position: absolute; /* added */
+            top: 60px; /* added */
+            left: 20%; /* added */
+            /* removed float and bottom */
+        }
+
+        #box-dynamic.minimize {
+            height: 50px;
+            line-height: 5px;
+        }
+
+        #box-dynamic h1 {
+            margin-right: 5px;
+            color: #fff;
+            font-size: 20px;
+            font-family: 'Roboto Condensed', sans-serif;
+            margin-left: 5px;
+            -ms-transition: all 0.3s ease-out;
+            -moz-transition: all 0.3s ease-out;
+            -webkit-transition: all 0.3s ease-out;
+            -o-transition: all 0.3s ease-out;
+            transition: all 0.3s ease-out;
+        }
+
+        #box-dynamic.minimize h1 {
+            font-size: 20px;
+            text-align: center;
+        }
+
+        #box-dynamic p {
+            color: white;
+            font-size: 15px;
+            line-height: 1.4;
+            margin-left: 5px;
+            font-family: 'Roboto Condensed', sans-serif;
+            -ms-transition: all 0.3s ease-out;
+            -moz-transition: all 0.3s ease-out;
+            -webkit-transition: all 0.3s ease-out;
+            -o-transition: all 0.3s ease-out;
+            transition: all 0.3s ease-out;
+        }
+
+        #box-dynamic.minimize p {
+            font-size: 0px;
+        }
+
+        #box-dynamic small {
+            color: #ccc;
+            font-size: 11px;
+            font-family: 'Roboto Condensed', sans-serif;
+            margin-left: 5px;
+            margin-top: 0;
+            -ms-transition: all 0.3s ease-out;
+            -moz-transition: all 0.3s ease-out;
+            -webkit-transition: all 0.3s ease-out;
+            -o-transition: all 0.3s ease-out;
+            transition: all 0.3s ease-out;
+        }
+
+        #box-dynamic.minimize small {
+            font-size: 10px;
+            margin-right: 5px;
+            float: right;
+        }
+
+        #box-dynamic img {
+            float: left;
+            width: 0;
+            height: 0;
+            visibility: hidden;
+            -ms-transition: all 0.3s ease-out;
+            -moz-transition: all 0.3s ease-out;
+            -webkit-transition: all 0.3s ease-out;
+            -o-transition: all 0.3s ease-out;
+            transition: all 0.3s ease-out;
+        }
+
+        #box-dynamic.minimize img {
+            float: left;
+            width: 50px;
+            height: 50px;
+            visibility: visible;
+        }
+
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+
+        .fixed-header {
+            width: 100%;
+            position: fixed;
+            background: #333;
+            padding: 10px 0;
+            color: #fff;
+        }
+
+        .fixed-header {
+            top: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        nava {
+            color: #fff;
+            padding: 7px 25px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h2 style="font-family:'Times New Roman'">CSV Upload & JSON|WORD Download</h2>
+</div>
+<form th:action="@{/upload}" id="uploadForm" method="post" enctype="multipart/form-data">
+    <div class="card">
+        <div class="drop_box">
+            <header>
+                <h4>Select File here</h4>
+            </header>
+            <p>Files Supported:TEXT, CSV </p>
+            <input type="file" hidden accept=".doc,.docx,.pdf" id="fileID" style="display:none;">
+            <input class="btn" type="file" name="file"/>
+            <br></br>
+            <input class="btn" type="submit" value="Upload"/>
+        </div>
+    </div>
+    <pre> </pre>
+</form>
+<table class="table table-striped table-responsive-md">
+    <h2 style="font-family:'Times New Roman'">Uploaded Files</h2>
+    <thead>
+    <tr>
+        <th>File Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    <ul>
+        <tr th:each="file : ${files}">
+            <td><a th:href="@{'/download/' + ${file}}">[[${file}]]</a></td>
+        </tr>
+        <tr th:each="file : ${jsonFiles}">
+            <td><a th:href="@{'/downloadJSON/' + ${file}}">[[${file}]]</a></td>
+        </tr>
+    </ul>
+    <p th:text="${message}"></p>
+    </tbody>
+</table>
+</body>
+</html>

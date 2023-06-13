@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    root: ERROR
+    org.springframework.web: ERROR
+    com.auth0.example: TRACE
+
+spring:
+  profiles:
+    active: dev
+  spring:
+    security:
+      user:
+        name: admin
+        password:
+        roles: ADMIN
+
